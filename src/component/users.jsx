@@ -9,25 +9,24 @@ const Users= () => {
     };
 
     const handlePhrase = (number) => {
-        if (number === 1) {
-            return 'человек тусанет';
-        } else if (number > 1 && number <= 4) {
-            return 'человека тусанут';
-        } else if (number > 4){
-            return 'человек тусанут';
-        };
+        const lastOne = Number(number.toString().slice(-1));
+        if (number > 4 && number < 15) return 'человек тусанет';
+        if ([2, 3, 4].indexOf(lastOne) >= 0) return 'человека тусанут';
+        if (lastOne === 1) return 'человек тусанет';
+        return 'человек тусанет';
     };
+    
 
     return (
         <>
             <h2>
                 <span className={"badge " + (users.length > 0 ? 'bg-primary' : 'bg-danger')}>
                     {users.length > 0 ?
-                    `${users.length + ' ' + handlePhrase(users.length)} с тобой сегодня` : 'Никто с тобой не тусанет'} 
+                    `${users.length} ${handlePhrase(users.length)} с тобой сегодня` : 'Никто с тобой не тусанет'} 
                 </span>
             </h2>
 
-            {users.length > 0 && (<table class="table table-hover">
+            {users.length > 0 && (<table className="table table-hover">
                 <thead>
                     <tr>
                         <th scope="col">Имя</th>
@@ -41,7 +40,7 @@ const Users= () => {
                 <tbody>
                     {users.map(user => (
                         <tr key={user._id}>
-                            <td scope="row">{user.name}</td>
+                            <td>{user.name}</td>
                             <td>{user.qualities.map(item => 
                                 <span className={'badge bg-'+item.color+' m-1'} key={item._id}>{item.name}</span>)}
                             </td>
