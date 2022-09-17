@@ -5,7 +5,7 @@ const Users= () => {
     const [users, setUsers] = useState(API.users.fetchAll());
 
     const handleDelete = (userId) => {
-        setUsers(prevState => prevState.filter(user => user !== userId))
+        setUsers(users.filter(user => user._id !== userId))
     };
 
     const handlePhrase = (number) => {
@@ -16,6 +16,14 @@ const Users= () => {
         return 'человек тусанет';
     };
     
+    const handleToggleBookMark = (id) => {
+        setUsers(users.map(user => {
+            if (user._id === id) {
+                user.bookmark = !user.bookmark
+            };
+            return user;
+        }));
+    };
 
     return (
         <>
@@ -34,6 +42,7 @@ const Users= () => {
                         <th scope="col">Профессия</th>
                         <th scope="col">Встретился, раз</th>
                         <th scope="col">Оценка</th>
+                        <th scope="col">Избранное</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -47,7 +56,10 @@ const Users= () => {
                             <td>{user.profession.name}</td>
                             <td>{user.completedMeetings}</td>
                             <td>{user.rate+'/5'}</td> 
-                            <td><button class="btn btn-danger" onClick={() => handleDelete(user)}>delete</button></td>
+                            <td>
+                                <i onClick={() => handleToggleBookMark(user._id)} className={user.bookmark === false ? 'bi bi-check-circle' : 'bi bi-check-circle-fill'}></i>
+                            </td> 
+                            <td><button class="btn btn-danger" onClick={() => handleDelete(user._id)}>delete</button></td>
                         </tr>
                     ))}    
                 </tbody>
@@ -55,6 +67,5 @@ const Users= () => {
         </>
     );
 };
-
 
 export default Users;
