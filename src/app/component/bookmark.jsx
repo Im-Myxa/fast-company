@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const BookMark = ({ onBookMark, ...user }) => {
     return (
@@ -13,6 +14,10 @@ const BookMark = ({ onBookMark, ...user }) => {
             ></i>
         </>
     );
+};
+
+BookMark.propTypes = {
+    onBookMark: PropTypes.func.isRequired
 };
 
 export default BookMark;

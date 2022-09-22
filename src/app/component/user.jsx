@@ -1,6 +1,7 @@
 import React from "react";
 import Qualitie from "./qualitie";
 import BookMark from "./bookmark";
+import PropTypes from "prop-types";
 
 const User = ({ onToggleBookMark, ...user }) => {
     return (
@@ -32,6 +33,10 @@ const User = ({ onToggleBookMark, ...user }) => {
             </td>
         </tr>
     );
+};
+
+User.propTypes = {
+    onToggleBookMark: PropTypes.func.isRequired
 };
 
 export default User;
