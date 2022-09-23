@@ -52,10 +52,9 @@ const Users = ({ users, onToggleBookMark, onDeleteUser }) => {
 };
 
 Users.propTypes = {
-    users: PropTypes.object.isRequired,
+    users: PropTypes.array.isRequired,
     onToggleBookMark: PropTypes.func.isRequired,
-    onDeleteUser: PropTypes.func.isRequired,
-    count: PropTypes.number.isRequired
+    onDeleteUser: PropTypes.func.isRequired
 };
 
 export default Users;
