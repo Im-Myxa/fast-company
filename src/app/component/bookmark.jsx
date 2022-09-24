@@ -1,23 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const BookMark = ({ onBookMark, ...user }) => {
+const BookMark = ({ onToggleBookMark, ...user }) => {
     return (
-        <>
-            <i
-                onClick={() => onBookMark(user._id)}
-                className={
-                    user.bookmark === false
-                        ? "bi bi-check-circle"
-                        : "bi bi-check-circle-fill"
-                }
-            ></i>
-        </>
+        <i
+            onClick={() => onToggleBookMark(user._id)}
+            className={
+                user.bookmark === false
+                    ? "bi bi-bookmark"
+                    : "bi bi-bookmark-fill"
+            }
+        ></i>
     );
 };
 
 BookMark.propTypes = {
-    onBookMark: PropTypes.func.isRequired
+    onToggleBookMark: PropTypes.func.isRequired
 };
 
 export default BookMark;
