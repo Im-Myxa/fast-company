@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+
 import API from "./api";
 import Users from "./component/users";
-import SearchStatus from "./component/searchStatus";
+import ShowStatus from "./component/showStatus";
 
 const App = () => {
     const [users, setUsers] = useState(API.users.fetchAll());
@@ -22,14 +23,14 @@ const App = () => {
     };
 
     return (
-        <div>
-            <SearchStatus length={users.length} />
+        <>
+            <ShowStatus length={users.length} />
             <Users
                 users={users}
                 onDeleteUser={handleDelete}
                 onToggleBookMark={handleToggleBookMark}
             />
-        </div>
+        </>
     );
 };
 
