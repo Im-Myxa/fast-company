@@ -14,7 +14,7 @@ const UsersTable = ({ users, onDeleteUser, onToggleBookMark, onSort, selectedSor
                 <QualitiesList qualities={user.qualities}/>
             )
         },
-        professionы: { path: "profession.name", name: "Профессия" },
+        profession: { path: "profession.name", name: "Профессия" },
         completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
         rate: { path: "rate", name: "Оценка" },
         bookmark: {

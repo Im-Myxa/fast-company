@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 
 import _ from "lodash";
 
-import Pagination from "./pagination";
+import Pagination from "../component/pagination";
 import { paginate } from "../utils/paginate";
-import UsersTable from "./usersTable";
-import GroupList from "./groupList";
+import UsersTable from "../component/usersTable";
+import GroupList from "../component/groupList";
 import API from "../api/index";
-import ShowStatus from "./showStatus";
+import ShowStatus from "../component/showStatus";
 
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -63,8 +63,8 @@ const Users = () => {
         const filteredUsers = selectedProf
             ? users.filter(
                 (user) =>
-                    JSON.stringify(user.profession) ===
-                    JSON.stringify(selectedProf)
+                    user.profession ===
+                    selectedProf
             )
             : users;
 
