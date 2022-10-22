@@ -20,12 +20,12 @@ const GroupList = ({ items, valueProperty, contentProperty, onItemSelect, select
     return (
         <ul className="list-group">
             {items.map((item) => (
-                <li key={item[valueProperty]}
+                <li key={item.valueProperty}
                     className={`list-group-item ${item === selectedItem ? "active" : ""}`}
                     onClick={() => onItemSelect(item)}
                     role="button"
                 >
-                    {item[contentProperty]}
+                    {item.contentProperty}
                 </li>
             ))}
         </ul>
