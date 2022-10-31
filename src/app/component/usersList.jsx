@@ -8,12 +8,14 @@ import UsersTable from "../component/usersTable";
 import GroupList from "../component/groupList";
 import API from "../api/index";
 import ShowStatus from "../component/showStatus";
+import SearchString from "./searchString";
 
 const UsersList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
+    const [searchQuery, setSearchQuery] = useState("");
 
     const pageSize = 8;
 
@@ -46,8 +48,14 @@ const UsersList = () => {
         setCurrentPage(1);
     }, [selectedProf]);
 
-    const handleProfessionSelect = item => {
+    const handleProfessionSelect = (item) => {
+        if (searchQuery !== "") setSearchQuery("");
         setSelectedProf(item);
+    };
+
+    const handleSerchQuery = (event) => {
+        setSelectedProf(undefined);
+        setSearchQuery(event.target.value);
     };
 
     const handlePageChange = (pageIndex) => {
@@ -60,16 +68,20 @@ const UsersList = () => {
 
     if (users) {
         const filteredUsers = selectedProf
-            ? users.filter(
-                (user) =>
-                    user.profession ===
-                    selectedProf
-            )
+            ? users.filter((user) => user.profession === selectedProf)
+            : searchQuery
+            ? users.filter((user) =>
+                  user.name.toLowerCase().includes(searchQuery.toLowerCase())
+              )
             : users;
 
         const count = filteredUsers.length;
 
-        const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
+        const sortedUsers = _.orderBy(
+            filteredUsers,
+            [sortBy.path],
+            [sortBy.order]
+        );
 
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
@@ -86,11 +98,19 @@ const UsersList = () => {
                             items={professions}
                             onItemSelect={handleProfessionSelect}
                         />
-                        <button className="btn btn-secondary mt-2" onClick={clearFilter}>Очистить фильтр</button>
+                        <button
+                            className="btn btn-secondary mt-2"
+                            onClick={clearFilter}
+                        >
+                            Очистить фильтр
+                        </button>
                     </div>
                 )}
                 <div className="d-flex flex-column">
                     <ShowStatus length={count} />
+
+                    <SearchString handleSearch={handleSerchQuery} />
+
                     {count > 0 && (
                         <UsersTable
                             users={userCrop}
