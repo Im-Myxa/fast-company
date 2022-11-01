@@ -1,20 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const SearchString = ({ handleSearch }) => {
+const SearchString = ({ value, handleSearch }) => {
     return (
-        <form>
+        <div>
             <input
                 type="text"
                 placeholder="Search..."
                 className="w-100"
+                value={value}
                 onChange={handleSearch}
             />
-        </form>
+        </div>
     );
 };
 
 SearchString.propTypes = {
+    value: PropTypes.string.isRequired,
     handleSearch: PropTypes.func.isRequired
 };
 
