@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React, { useState, useEffect } from "react";
 
 import _ from "lodash";
@@ -49,7 +50,9 @@ const UsersList = () => {
     }, [selectedProf]);
 
     const handleProfessionSelect = (item) => {
-        if (searchQuery !== "") setSearchQuery("");
+        if (searchQuery !== "") {
+            setSearchQuery("");
+        }
         setSelectedProf(item);
     };
 
@@ -109,7 +112,10 @@ const UsersList = () => {
                 <div className="d-flex flex-column">
                     <ShowStatus length={count} />
 
-                    <SearchString handleSearch={handleSerchQuery} />
+                    <SearchString
+                        value={searchQuery}
+                        handleSearch={handleSerchQuery}
+                    />
 
                     {count > 0 && (
                         <UsersTable
