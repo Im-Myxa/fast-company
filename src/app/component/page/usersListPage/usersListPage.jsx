@@ -24,7 +24,6 @@ const UsersListPage = () => {
     useEffect(() => {
         API.users.fetchAll().then((data) => setUsers(data));
     }, []);
-    console.log(users);
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
