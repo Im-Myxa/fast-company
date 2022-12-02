@@ -10,6 +10,7 @@ import GroupList from "../../common/groupList";
 import API from "../../../api/index";
 import ShowStatus from "../../ui/showStatus";
 import SearchString from "../../ui/searchString";
+import { useUser } from "../../../hooks/useUsers";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -20,24 +21,23 @@ const UsersListPage = () => {
 
     const pageSize = 8;
 
-    const [users, setUsers] = useState();
-    useEffect(() => {
-        API.users.fetchAll().then((data) => setUsers(data));
-    }, []);
+    const { users } = useUser();
+    // console.log(users);
 
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId));
+        // setUsers(users.filter((user) => user._id !== userId));
+        console.log(userId);
     };
 
     const handleToggleBookMark = (id) => {
-        setUsers(
-            users.map((user) => {
-                if (user._id === id) {
-                    user.bookmark = !user.bookmark;
-                }
-                return user;
-            })
-        );
+        const newArray = users.map((user) => {
+            if (user._id === id) {
+                // user.bookmark = !user.bookmark;
+                return { ...user, bookmark: !user.bookmark };
+            }
+            return user;
+        });
+        console.log(newArray);
     };
 
     useEffect(() => {
