@@ -20,14 +20,15 @@ const SelectField = ({
     };
 
     const optionsArray =
+        // !Array.isArray(options) && typeof options === "object"
+        //     ? Object.values(options)
+        //     : options;
         !Array.isArray(options) && typeof options === "object"
-            ? Object.values(options)
+            ? Object.keys(options).map((optionName) => ({
+                  name: options[optionName].name,
+                  value: options[optionName]._id
+              }))
             : options;
-    // !Array.isArray(options) && typeof options === "object"
-    //     ? Object.keys(options).map((optionName) => ({
-    //           name: options[optionName].name,
-    //           value: options[optionName]._id
-    //       }))
 
     return (
         <div className="mb-4">

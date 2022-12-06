@@ -13,13 +13,11 @@ export const QualitiesProvider = ({ children }) => {
     const [isLoading, setLoading] = useState(true);
     const [qualities, setQualities] = useState([]);
     const [error, setError] = useState(null);
-    console.log(qualities);
 
     useEffect(() => {
         const getQualities = async () => {
             try {
                 const { content } = await qualityService.fetchAll();
-                console.log(content);
                 setQualities(content);
                 setLoading(false);
             } catch (error) {
