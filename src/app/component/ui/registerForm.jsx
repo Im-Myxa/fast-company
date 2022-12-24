@@ -20,6 +20,7 @@ const RegisterForm = () => {
         profession: "",
         sex: "male",
         qualities: [],
+        name: "",
         licence: false
     });
     const { signUp } = useAuth();
@@ -49,6 +50,15 @@ const RegisterForm = () => {
             },
             isEmail: {
                 message: "Email введен некорректоно"
+            }
+        },
+        name: {
+            isRequired: {
+                message: "Имя обязательно для заполнения"
+            },
+            min: {
+                message: "Имя должно содержать минимум 2 символа",
+                value: 3
             }
         },
         password: {
@@ -142,6 +152,13 @@ const RegisterForm = () => {
                 value={data.email}
                 onChange={handleChange}
                 error={errors.email}
+            />
+            <TextField
+                label="Имя"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                error={errors.name}
             />
             <TextField
                 label="Пароль"
