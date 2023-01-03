@@ -10,6 +10,20 @@ const ProtectedRoute = ({ component: Component, children, ...rest }) => {
         <Route
             {...rest}
             render={(props) => {
+                // console.log(props);
+                // if (currentUser) {
+                //     return (
+                //         <Redirect
+                //             to={{
+                //                 pathname: path,
+                //                 state: {
+                //                     from: props.location
+                //                 }
+                //             }}
+                //         />
+                //     );
+                // }
+
                 if (!currentUser) {
                     return (
                         <Redirect
@@ -22,6 +36,7 @@ const ProtectedRoute = ({ component: Component, children, ...rest }) => {
                         />
                     );
                 }
+
                 return Component ? <Component {...props} /> : children;
             }}
         />
