@@ -10,13 +10,18 @@ import GroupList from "../../common/groupList";
 import ShowStatus from "../../ui/showStatus";
 import SearchString from "../../ui/searchString";
 import { useUser } from "../../../hooks/useUsers";
-import { useProfessions } from "../../../hooks/useProfession";
 import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import {
+    getProfessions,
+    getProfessionsLoadingStatus
+} from "../../../store/professions";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const { currentUser } = useAuth();
-    const { professions, isLoading: isLoadingProfession } = useProfessions();
+    const professions = useSelector(getProfessions());
+    const isLoadingProfession = useSelector(getProfessionsLoadingStatus());
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [searchQuery, setSearchQuery] = useState("");
@@ -90,7 +95,6 @@ const UsersListPage = () => {
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
 
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
-    console.log(userCrop);
 
     const clearFilter = () => {
         setSelectedProf();

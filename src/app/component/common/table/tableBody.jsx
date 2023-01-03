@@ -14,7 +14,7 @@ const TableBody = ({ data, columns }) => {
         }
         return _.get(item, columns[column].path);
     };
-
+    if (!data) return "loading";
     return (
         <tbody>
             {data.map((item) => (
