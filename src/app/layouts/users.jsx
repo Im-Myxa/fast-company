@@ -1,28 +1,34 @@
-/* eslint-disable semi */
-/* eslint-disable indent */
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useParams, Redirect } from "react-router-dom";
 import EditUserPage from "../component/page/editUserPage/editUserPage";
-import UserPage from "../component/page/userPage";
-import UsersListPage from "../component/page/usersListPage";
-import UserProvider from "../hooks/useUsers";
+import UserPage from "../component/page/userPage/index.js";
+import UsersListPage from "../component/page/usersListPage/index.js";
+import UsersLoader from "../component/ui/hoc/usersLoader";
+import { getCurrentUserId } from "../store/users";
 
 const Users = () => {
-    const { userId, edit } = useParams();
+    const params = useParams();
+    const { userId, edit } = params;
+    const currentUserId = useSelector(getCurrentUserId());
 
     return (
         <>
-            <UserProvider>
-                {edit ? (
-                    <EditUserPage userId={userId} />
-                ) : userId ? (
-                    <UserPage userId={userId} />
+            <UsersLoader>
+                {userId ? (
+                    edit ? (
+                        userId === currentUserId ? (
+                            <EditUserPage />
+                        ) : (
+                            <Redirect to={`/users/${currentUserId}/edit`} />
+                        )
+                    ) : (
+                        <UserPage userId={userId} />
+                    )
                 ) : (
                     <UsersListPage />
                 )}
-                {/* {userId ? <UserPage userId={userId} /> : <UsersListPage />}
-            {edit && <EditUserPage userId={userId} />} */}
-            </UserProvider>
+            </UsersLoader>
         </>
     );
 };
