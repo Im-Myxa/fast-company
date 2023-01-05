@@ -30,7 +30,7 @@ const UserPage = ({ userId }) => {
             </div>
         );
     }
-    return "Loading...";
+    return "Loading user page";
 };
 
 UserPage.propTypes = {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import TextField from "../../common/form/textField";
@@ -8,8 +7,7 @@ import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import { validator } from "../../../utils/validator";
 import BackHistoryButton from "../../common/table/backButton";
-import { useAuth } from "../../../hooks/useAuth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     getQualities,
     getQualitiesLoadingStatus
@@ -18,10 +16,10 @@ import {
     getProfessions,
     getProfessionsLoadingStatus
 } from "../../../store/professions";
-import { getCurrentUserData } from "../../../store/users";
+import { getCurrentUserData, updateUserData } from "../../../store/users";
 
 const EditUserPage = ({ userId }) => {
-    const { updateUserData } = useAuth();
+    const dispatch = useDispatch();
     const currentUser = useSelector(getCurrentUserData());
     const professions = useSelector(getProfessions());
     const professionLoading = useSelector(getProfessionsLoadingStatus());
@@ -30,7 +28,6 @@ const EditUserPage = ({ userId }) => {
     const [data, setData] = useState();
     const [errors, setErrors] = useState({});
     const [isLoading, setLoading] = useState(true);
-    const history = useHistory();
 
     function getQualitiesById(elements) {
         const qualitiesArray = [];
@@ -116,17 +113,15 @@ const EditUserPage = ({ userId }) => {
 
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        const { qualities } = data;
         const updatedUser = {
             ...data,
-            qualities: qualities.map((q) => q.value)
+            qualities: data.qualities.map((q) => q.value)
         };
-        await updateUserData(updatedUser);
-        history.push(`/users/${userId}`);
+        dispatch(updateUserData(updatedUser));
     };
 
     if (!isLoading) {
