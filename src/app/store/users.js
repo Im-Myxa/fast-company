@@ -3,6 +3,7 @@ import { createAction, createSlice } from "@reduxjs/toolkit";
 import authService from "../services/auth.service";
 import localStorageService from "../services/localStorage.service";
 import userService from "../services/user.service";
+import { generateAuthError } from "../utils/generateAuthError";
 import getRandomInt from "../utils/getRandomInt";
 import history from "../utils/history";
 
@@ -60,11 +61,13 @@ const usersSlice = createSlice({
             state.dataLoaded = false;
         },
         userUpdate: (state, action) => {
-            state.dataLoaded = false;
             const userIndex = state.entities.findIndex(
                 (u) => u._id === action.payload._id
             );
             state.entities[userIndex] = action.payload;
+        },
+        authRequested: (state) => {
+            state.error = null;
         }
     }
 });
@@ -98,7 +101,13 @@ export const login =
             localStorageService.setTokens(data);
             history.push(redirect);
         } catch (error) {
-            dispatch(authRequestFailed(error.message));
+            const { code, message } = error.response.data.error;
+            if (code === 400) {
+                const errorMessage = generateAuthError(message);
+                dispatch(authRequestFailed(errorMessage));
+            } else {
+                dispatch(authRequestFailed(error.message));
+            }
         }
     };
 
@@ -190,5 +199,7 @@ export const getIsLoggedIn = () => (state) => state.users.isLoggedIn;
 export const getCurrentUserId = () => (state) => state.users.auth.userId;
 
 export const getUsersLoadingStatus = () => (state) => state.users.isLoading;
+
+export const getAuthError = () => (state) => state.users.error;
 
 export default usersReducer;
