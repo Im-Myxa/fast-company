@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getAuthError, login } from "../../store/users";
+import { getAuthErrors, login } from "../../store/users";
 
 const LoginForm = () => {
-    const dispatch = useDispatch();
-    const history = useHistory();
     const [data, setData] = useState({
         email: "",
         password: "",
         stayOn: false
     });
-    const loginError = useSelector(getAuthError());
+    const loginError = useSelector(getAuthErrors());
+    const history = useHistory();
+    const dispath = useDispatch();
     const [errors, setErrors] = useState({});
 
     const handleChange = (target) => {
@@ -25,26 +24,26 @@ const LoginForm = () => {
         }));
     };
 
-    const validatorConfig = {
+    const validatorConfog = {
         email: {
             isRequired: {
-                message: "Электронная почта обязательно для заполнения"
+                message: "Электронная почта обязательна для заполнения"
             }
         },
         password: {
-            isRequired: { message: "Пароль обязателен для заполнения" }
+            isRequired: {
+                message: "Пароль обязателкн для заполнения"
+            }
         }
     };
     useEffect(() => {
         validate();
     }, [data]);
-
     const validate = () => {
-        const errors = validator(data, validatorConfig);
+        const errors = validator(data, validatorConfog);
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
     const isValid = Object.keys(errors).length === 0;
 
     const handleSubmit = (e) => {
@@ -55,9 +54,8 @@ const LoginForm = () => {
             ? history.location.state.from.pathname
             : "/";
 
-        dispatch(login({ payload: data, redirect }));
+        dispath(login({ payload: data, redirect }));
     };
-
     return (
         <form onSubmit={handleSubmit}>
             <TextField
@@ -76,13 +74,14 @@ const LoginForm = () => {
                 error={errors.password}
             />
             <CheckBoxField
-                name="stayOn"
                 value={data.stayOn}
                 onChange={handleChange}
+                name="stayOn"
             >
                 Оставаться в системе
             </CheckBoxField>
             {loginError && <p className="text-danger">{loginError}</p>}
+
             <button
                 type="submit"
                 disabled={!isValid}

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import PropTypes, { node } from "prop-types";
+import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getIsLoggedIn,
@@ -13,7 +13,6 @@ const AppLoader = ({ children }) => {
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(getIsLoggedIn());
     const usersStatusLoading = useSelector(getUsersLoadingStatus());
-
     useEffect(() => {
         dispatch(loadQualitiesList());
         dispatch(loadProfessionsList());
@@ -21,12 +20,14 @@ const AppLoader = ({ children }) => {
             dispatch(loadUsersList());
         }
     }, [isLoggedIn]);
-
-    if (usersStatusLoading) return "Loading...";
+    if (usersStatusLoading) return "loading";
     return children;
 };
 
 AppLoader.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), node])
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
 };
 export default AppLoader;

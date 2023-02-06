@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import _ from "lodash";
 
 const TableBody = ({ data, columns }) => {
@@ -14,7 +13,6 @@ const TableBody = ({ data, columns }) => {
         }
         return _.get(item, columns[column].path);
     };
-    if (!data) return "loading";
     return (
         <tbody>
             {data.map((item) => (
