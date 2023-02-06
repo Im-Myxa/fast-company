@@ -1,20 +1,19 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
-import { getCurrentUserId } from "../../store/users";
-
+import { getCurrentUserData } from "../../store/users";
 const UserCard = ({ user }) => {
-    const currentUserId = useSelector(getCurrentUserId());
     const history = useHistory();
+
+    const currentUser = useSelector(getCurrentUserData());
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
     };
-
     return (
         <div className="card mb-3">
             <div className="card-body">
-                {currentUserId === user._id && (
+                {currentUser._id === user._id && (
                     <button
                         className="position-absolute top-0 end-0 btn btn-light btn-sm"
                         onClick={handleClick}
@@ -23,12 +22,6 @@ const UserCard = ({ user }) => {
                     </button>
                 )}
 
-                <button
-                    className="position-absolute top-0 start-0 btn btn-light btn-sm"
-                    onClick={() => history.push("/users")}
-                >
-                    <i className="bi bi-caret-left"></i>
-                </button>
                 <div className="d-flex flex-column align-items-center text-center position-relative">
                     <img
                         src={user.image}
@@ -57,8 +50,8 @@ const UserCard = ({ user }) => {
         </div>
     );
 };
-
 UserCard.propTypes = {
     user: PropTypes.object
 };
+
 export default UserCard;

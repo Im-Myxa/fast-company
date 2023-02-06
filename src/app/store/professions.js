@@ -14,12 +14,12 @@ const professionsSlice = createSlice({
         professionsRequested: (state) => {
             state.isLoading = true;
         },
-        professionsReceived: (state, action) => {
+        professionsReceved: (state, action) => {
             state.entities = action.payload;
             state.lastFetch = Date.now();
             state.isLoading = false;
         },
-        professionsRequesteFiled: (state, action) => {
+        professionsRequestFiled: (state, action) => {
             state.error = action.payload;
             state.isLoading = false;
         }
@@ -27,41 +27,28 @@ const professionsSlice = createSlice({
 });
 
 const { reducer: professionsReducer, actions } = professionsSlice;
-const { professionsRequested, professionsReceived, professionsRequesteFiled } =
+const { professionsRequested, professionsReceved, professionsRequestFiled } =
     actions;
 
 export const loadProfessionsList = () => async (dispatch, getState) => {
     const { lastFetch } = getState().professions;
     if (isOutdated(lastFetch)) {
+        console.log("lastFetch", lastFetch);
         dispatch(professionsRequested());
         try {
             const { content } = await professionService.get();
-            dispatch(professionsReceived(content));
+            dispatch(professionsReceved(content));
         } catch (error) {
-            dispatch(professionsRequesteFiled(error.message));
+            dispatch(professionsRequestFiled(error.message));
         }
     }
 };
-
 export const getProfessions = () => (state) => state.professions.entities;
-
 export const getProfessionsLoadingStatus = () => (state) =>
     state.professions.isLoading;
-
-export const getProfessionsByIds = (professionsIds) => (state) => {
-    if (state.professions.entities && professionsIds) {
-        return state.professions.entities.find(
-            (prof) => prof._id === professionsIds
-        );
-        // let professions = {};
-        // for (const profession of state.professions.entities) {
-        //     if (profession._id === professionsIds) {
-        //         professions = profession;
-        //         break;
-        //     }
-        // }
-        // return professions;
+export const getProfessionbyId = (id) => (state) => {
+    if (state.professions.entities) {
+        return state.professions.entities.find((p) => p._id === id);
     }
-    // return [];
 };
 export default professionsReducer;

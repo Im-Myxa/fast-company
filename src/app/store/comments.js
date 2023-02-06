@@ -1,7 +1,7 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import commentService from "../services/comment.service";
+import { getCurrentUserId } from "./users";
 import { nanoid } from "nanoid";
-
 const commentsSlice = createSlice({
     name: "comments",
     initialState: {
@@ -13,21 +13,18 @@ const commentsSlice = createSlice({
         commentsRequested: (state) => {
             state.isLoading = true;
         },
-        commentsReceived: (state, action) => {
+        commentsReceved: (state, action) => {
             state.entities = action.payload;
             state.isLoading = false;
         },
-        commentsRequestedFiled: (state, action) => {
+        commentsRequestFiled: (state, action) => {
             state.error = action.payload;
             state.isLoading = false;
         },
-        commentsCreated: (state, action) => {
-            if (!Array.isArray(state.entities)) {
-                state.entities = [];
-            }
+        commetnCreated: (state, action) => {
             state.entities.push(action.payload);
         },
-        commentsRemoved: (state, action) => {
+        commentRemoved: (state, action) => {
             state.entities = state.entities.filter(
                 (c) => c._id !== action.payload
             );
@@ -38,60 +35,52 @@ const commentsSlice = createSlice({
 const { reducer: commentsReducer, actions } = commentsSlice;
 const {
     commentsRequested,
-    commentsReceived,
-    commentsRequestedFiled,
-    commentsCreated,
-    commentsRemoved
+    commentsReceved,
+    commentsRequestFiled,
+    commetnCreated,
+    commentRemoved
 } = actions;
 
-const commentCreateRequested = createAction("comments/commentCreateRequested");
-const createCommentFailed = createAction("comments/createCommentFailed");
-const commentRemoveRequested = createAction("comments/commentRemoveRequested");
-const removeCommentFailed = createAction("comments/removeCommentFailed");
+const addCommentRequested = createAction("comments/addCommentRequested");
+const removeCommentRequested = createAction("comments/removeCommentRequested");
 
 export const loadCommentsList = (userId) => async (dispatch) => {
     dispatch(commentsRequested());
     try {
         const { content } = await commentService.getComments(userId);
-        dispatch(commentsReceived(content));
+        dispatch(commentsReceved(content));
     } catch (error) {
-        dispatch(commentsRequestedFiled(error.message));
+        dispatch(commentsRequestFiled(error.message));
     }
 };
-
-export const createComments =
-    (payload, userId, currentUserId) => async (dispatch) => {
-        dispatch(commentCreateRequested());
-        const comment = {
-            ...payload,
-            pageId: userId,
-            created_at: Date.now(),
-            userId: currentUserId,
-            _id: nanoid()
-        };
-        try {
-            const { content } = await commentService.createComment(comment);
-            dispatch(commentsCreated(content));
-        } catch (error) {
-            dispatch(createCommentFailed(error.message));
-        }
+export const createComment = (payload) => async (dispatch, getState) => {
+    dispatch(addCommentRequested());
+    const comment = {
+        ...payload,
+        _id: nanoid(),
+        created_at: Date.now(),
+        userId: getCurrentUserId()(getState())
     };
-export const removeComments = (id) => async (dispatch) => {
-    console.log(id);
-    dispatch(commentRemoveRequested());
     try {
-        const { content } = await commentService.removeComment(id);
-        console.log(content);
+        const { content } = await commentService.createComment(comment);
+        dispatch(commetnCreated(content));
+    } catch (error) {
+        dispatch(commentsRequestFiled(error.message));
+    }
+};
+export const removeComment = (commentId) => async (dispatch) => {
+    dispatch(removeCommentRequested());
+    try {
+        const { content } = await commentService.removeComment(commentId);
         if (content === null) {
-            dispatch(commentsRemoved(id));
+            dispatch(commentRemoved(commentId));
         }
     } catch (error) {
-        dispatch(removeCommentFailed(error.message));
+        dispatch(commentsRequestFiled(error.message));
     }
 };
 
 export const getComments = () => (state) => state.comments.entities;
-
 export const getCommentsLoadingStatus = () => (state) =>
     state.comments.isLoading;
 
